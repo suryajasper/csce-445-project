@@ -1,0 +1,32 @@
+.main-flexbox {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  border: 2px solid black;
+}
+
+.header {
+    flex: 0.75;
+}
+
+.personas {
+    flex: 3;
+}
+
+.user-response {
+    flex: 1.5;
+}
+
+.grid-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 4fr 0.5fr 1fr;
+    place-items: center;
+
+    width: 80vw;
+}
