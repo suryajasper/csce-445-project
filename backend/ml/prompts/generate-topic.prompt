@@ -1,0 +1,20 @@
+You are generating a random debate topic for a persuasive speaking tool. Each topic must include two clear and opposing **contention definitions** — one for the affirmative and one for the negative.
+
+Your output must be a single JSON object matching this schema:
+
+```json
+{
+  "topic": "The core question being debated.",
+  "contention_yes": "A concise and explicit definition of what it means to affirm the topic.",
+  "contention_no": "A concise and explicit definition of what it means to negate the topic."
+}
+```
+
+Guidelines:
+- The topic should be **clearly worded as a yes/no proposition**, suitable for formal or informal debate (e.g., "Social media does more harm than good").
+- The `contention_yes` should succinctly define what it means to argue **in favor of the topic**.
+- The `contention_no` should succinctly define what it means to argue **against the topic**.
+- Do **not** include full arguments or opinions—just the **meaning** of affirming or negating.
+- The topic should be broadly relevant (e.g., ethics, law, tech, society), and not obscure or inflammatory.
+
+Only return the valid JSON object. Do not include any additional explanation.
