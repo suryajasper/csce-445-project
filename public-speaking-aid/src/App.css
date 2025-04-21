@@ -77,7 +77,7 @@ h1 {
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 1rem;
-  width: 200px;
+  width: 400px;
   transition: transform 0.2s;
 }
 
@@ -100,18 +100,17 @@ h1 {
 }
 
 .mute-button {
-  background-color: #3498db;
+  background: none;
   border: none;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
   cursor: pointer;
-  margin: 0.5rem 0;
-  transition: background-color 0.2s;
+  padding: 4px;
+  margin-top: 4px;
+  color: #333;
+  transition: color 0.2s ease;
 }
 
 .mute-button:hover {
-  background-color: #2980b9;
+  color: #000;
 }
 
 .quote {

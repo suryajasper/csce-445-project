@@ -7,6 +7,7 @@ class Topic(BaseModel):
     contention_no: str
 
 class Character(BaseModel):
+    id: int
     name: str
     age: int
     position: float

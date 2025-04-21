@@ -36,6 +36,8 @@ class SessionPipeline:
             output_schema=CharacterList
         )
         self.characters = CharacterList(**characters_dict).characters
+        for i, character in enumerate(self.characters):
+            character.id = i
         self.conversations = [[] for _ in range(len(self.characters))]
     
     def load_user_response(self, user_response: str, character_ids: list[int]):
