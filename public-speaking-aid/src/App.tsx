@@ -65,6 +65,16 @@ const App: React.FC = () => {
     }
   };
 
+  const positionToColor = (position: number) : string => {
+    if (position < -3) {
+      return '#a80000';
+    } else if (position > 3) {
+      return '#048000';
+    } else {
+      return '#807900';
+    }
+  }
+
   useEffect(() => {
     interface CharacterResponse {
       character_id: number;
@@ -142,19 +152,26 @@ const App: React.FC = () => {
             key={p.id} 
             onClick={() => setSelectedPersona(p)}
           >
-            <p className="character-name">{p.name}</p>
+            <div className='character-header'>
+              <p 
+                className="character-name"
+                style={{color: positionToColor(p.position)}}
+              >
+                {p.name}
+              </p>
+              <button
+                className="mute-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleMute(p.id);
+                }}
+              >
+                {mutedState[p.id] ? <FiVolumeX size={20} color='red' /> : <FiVolume2 size={20} />}
+              </button>
+            </div>
             <div>
               <PositionSlider position={p.position} />
             </div>
-            <button
-              className="mute-button"
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleMute(p.id);
-              }}
-            >
-              {mutedState[p.id] ? <FiVolumeX size={20} /> : <FiVolume2 size={20} />}
-            </button>
             <p className="quote">{p.quote}</p>
           </div>
         ))}
@@ -168,7 +185,7 @@ const App: React.FC = () => {
             onClick={toggleUserMute}
             title={isUserMuted ? "Unmute mic" : "Mute mic"}
           >
-            {isUserMuted ? <FiMicOff size={20} /> : <FiMic size={20} />}
+            {isUserMuted ? <FiMicOff size={20} color='red' /> : <FiMic size={20} />}
           </button>
           <p>{transcript || 'Say something...'}</p>
         </div>
@@ -176,7 +193,9 @@ const App: React.FC = () => {
 
       {selectedPersona && (
         <div className="modal">
-          <h2>{selectedPersona.name}</h2>
+          <h2 
+            style={{color: positionToColor(selectedPersona.position)}}
+          >{selectedPersona.name}</h2>
           <p>{selectedPersona.experience}</p>
           <button onClick={() => setSelectedPersona(null)}>Close</button>
         </div>
