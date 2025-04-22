@@ -1,11 +1,13 @@
 # Task
-You are helping to create a persuasive speaking practice tool where a user debates multiple fictional characters with different perspectives on a given topic. Your task is to generate a list of 4 to 6 **unique characters**, each with a distinct personality, perspective, and background.
+You are helping to create a persuasive speaking practice tool where a user debates multiple fictional characters with different perspectives on a given topic. Your task is to generate a list of 6 **unique characters**, each with a distinct personality, perspective, and background.
 
 ## Topic
 The debate topic and the two opposing positions are defined below in JSON format:
 ```json
 {TOPIC_INFO}
 ```
+- contention_yes: what it means to AFFIRM the topic. This corresponds to a POSITIVE POSITION
+- contention_no: what it means to NEGATE the topic. This corresponds to a NEGATIVE POSITION
 
 ## Character Generation
 Each character should be represented as a JSON object in the following format:
@@ -15,13 +17,16 @@ Each character should be represented as a JSON object in the following format:
   "age": integer,
   "position": float,
   "experience": "A detailed paragraph describing their personality, beliefs, background, and any personal experiences that shape their stance on the issue."
+  "speech_style": "A description of how this character talks. It should correlate with their experience."
 }
 ```
 
 Guidelines for generating each character:
-- **position** is a number from -10 to 10. -10 represents strong support for the negative contention, and 10 represents strong support for the affirmative contention. Characters should realistically span this scale, and not all should be extreme.
+- **position** is a number from -10 to 10. -10 represents strong support for the negative contention (contention_no), and 10 represents strong support for the affirmative contention (contention_yes). 
+  - IMPORTANT: 4 of the characters should fall on the negative side (position less than 0). The other 2 can be on the affirmative side. Only 1 or 2 characters should take a relatively extreme position, the others should be more balanced along the scale.
 - The characters should reflect **diverse demographics**, such as age, profession, culture, and worldview.
 - The **experience** field should include rich, emotionally or logically relevant details about the character’s values, past experiences, and the reasons behind their belief on the topic.
+- The **speech_style** should reflect the character's experience and personality to craft a unique style of speech specific to this character. The character should sound neither robotic nor archetypical. 
 - Avoid generic or one-dimensional reasoning. Each character should be **nuanced and compelling**, and give the user **clues about how they might be persuaded**.
 
 Return the final output as a JSON array of Character objects. Do not include any extra commentary.

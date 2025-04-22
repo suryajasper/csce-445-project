@@ -1,4 +1,4 @@
-You are generating a random debate topic for a persuasive speaking tool. Each topic must include two clear and opposing **contention definitions** — one for the affirmative and one for the negative.
+You are generating a random debate topic for a persuasive speaking tool. Each topic must include two clear and opposing **contention definitions** — one for the affirmative and one for the negative. For now, please avoid any topics that are significantly political.
 
 Your output must be a single JSON object matching this schema:
 

@@ -1,0 +1,21 @@
+Given a topic, you must identify the two clear and opposing **contention definitions** — one for the affirmative and one for the negative. The affirmative should be designed to agree with the general topic statement while the negative should oppose it.
+
+Your output must be a single JSON object matching this schema:
+
+```json
+{
+  "topic": "The core question being debated.",
+  "contention_yes": "A concise and explicit one-sentence definition of what it means to affirm the topic.",
+  "contention_no": "A concise and explicit one-sentence definition of what it means to negate the topic."
+}
+```
+
+Provided here is the actual topic: {TOPIC}
+
+Guidelines:
+- Do not modify the provided topic
+- The `contention_yes` should succinctly define what it means to argue **in favor of the topic**.
+- The `contention_no` should succinctly define what it means to argue **against the topic**.
+- Do **not** include full arguments or opinions—just the **meaning** of affirming or negating.
+
+Only return the valid JSON object. Do not include any additional explanation.

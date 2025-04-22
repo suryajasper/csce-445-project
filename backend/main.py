@@ -6,21 +6,21 @@ from typing import Dict, Optional
 from ml.pipeline import SessionPipeline  # Your ML pipeline here
 
 class WebSocketSession:
-    def __init__(self, websocket, pipeline: SessionPipeline, initialized: bool):
+    def __init__(self, websocket, pipeline: SessionPipeline):
         self.websocket = websocket
         self.send_queue = asyncio.Queue()
         self.pipeline = pipeline
-        self.already_initialized = initialized  # Avoid double init
 
     async def send_loop(self):
         # Send initial topic/characters on new connection
-        await self.websocket.send(json.dumps({
-            'type': 'initialize',
-            'data': {
-                'topic': self.pipeline.topic.model_dump(),
-                'characters': [c.model_dump() for c in self.pipeline.characters],
-            }
-        }))
+        if self.pipeline.initialized:
+            await self.websocket.send(json.dumps({
+                'type': 'initialize',
+                'data': {
+                    'topic': self.pipeline.topic.model_dump(),
+                    'characters': [c.model_dump() for c in self.pipeline.characters],
+                }
+            }))
 
         while True:
             message = await self.send_queue.get()
@@ -60,6 +60,21 @@ class WebSocketSession:
                             'history': response['history'],
                         }
                     })
+            
+            elif message['type'] == 'initialize':
+                print('Initializing')
+                generate_topic = data['generate_topic']
+                given_topic = data['topic']
+                self.pipeline.initialize(None if generate_topic else given_topic)
+
+                await self.websocket.send(json.dumps({
+                    'type': 'initialize',
+                    'data': {
+                        'topic': self.pipeline.topic.model_dump(),
+                        'characters': [c.model_dump() for c in self.pipeline.characters],
+                    }
+                }))
+
         except Exception as e:
             print("Error processing message:", e)
 
@@ -76,11 +91,9 @@ class WebSocketServer:
 
         # Shared pipeline initialized only once
         if self.pipeline is None:
-            print("Initializing shared pipeline...")
             self.pipeline = SessionPipeline()
-            self.pipeline.initialize()
 
-        session = WebSocketSession(websocket, self.pipeline, initialized=True)
+        session = WebSocketSession(websocket, self.pipeline)
         self.sessions[session_id] = session
 
         send_task = asyncio.create_task(session.send_loop())

@@ -10,18 +10,29 @@ class SessionPipeline:
         self.conversations : list[Conversation] = []
         self.llm = GPT()
         self.response_queue = Queue()
+        self.initialized = False
     
     def initialize(self, topic: str = None):
         if not topic:
             self.generate_topic()
         else:
-            self.set_topic(topic)
+            self.load_topic(topic)
         self.generate_characters()
+        self.initialized = True
     
     def generate_topic(self):
         topic_dict: dict = self.llm.request(
             role='You are tasked with generating topics for debate',
             prompt=Prompt('generate-topic').get_content(),
+            output_schema=Topic
+        )
+        self.topic = Topic(**topic_dict)
+    
+    def load_topic(self, topic: str):
+        prompt = Prompt('amend-topic', { 'TOPIC': topic })
+        topic_dict: dict = self.llm.request(
+            role='You are tasked with explicitly defining topics for debate',
+            prompt=prompt.get_content(),
             output_schema=Topic
         )
         self.topic = Topic(**topic_dict)
@@ -47,7 +58,8 @@ class SessionPipeline:
             })
             character_response = self.get_character_response(character_id)
             self.conversations[character_id].append({
-                'role': 'assistant', 'content': character_response.response
+                'role': 'assistant', 
+                'content': character_response.model_dump_json(indent=4)
             })
             self.characters[character_id].position = character_response.position_update
             self.response_queue.put({

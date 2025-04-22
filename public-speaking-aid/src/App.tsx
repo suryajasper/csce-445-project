@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FiVolumeX, FiVolume2, FiMic, FiMicOff } from 'react-icons/fi';
+import { ClipLoader } from 'react-spinners';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import PositionSlider from './PositionSlider';
 import { useWebSocket } from './WebSocketProvider';
@@ -16,7 +17,8 @@ type Persona = {
 
 const App: React.FC = () => {
   const [personas, setPersonas] = useState<Persona[]>([]);
-  const [topic, setTopic] = useState<string>("Is this class useful?");
+  const [topic, setTopic] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [mutedState, setMutedState] = useState<Record<number, boolean>>(
     personas.reduce((acc, p) => ({ ...acc, [p.id]: p.id !== 0 && p.id !== 1 }), {})
@@ -135,34 +137,59 @@ const App: React.FC = () => {
         ));
       setMutedState(data.characters.reduce((acc, c) => ({ ...acc, [c.id]: true }), {}));
       setTopic(data.topic.topic);
+      setIsLoading(false);
     };
 
     on('initialize', handler);
     return () => off('initialize', handler);
   }, [on, off]);
 
-  return (
-    <div className="app-container">
-      <div className="topic-select-container" style={{ marginBottom: '1.5rem' }}>
-        <input
-          type="text"
-          value={topic}
-          onChange={(e) => setTopic(e.target.value)}
-          placeholder="Enter your own topic..."
-          className="topic-input"
-        />
-        <button
-          onClick={() => {
-            if (topic.trim()) {
-              setTopic(topic.trim());
-            }
-          }}
-          className="set-button"
-        >
-          Set Topic
-        </button>
+  const initializeServer = (generateTopic: boolean) => {
+    sendMessage('initialize', {
+      'generate_topic': generateTopic,
+      'topic': topic,
+    });
+    setIsLoading(true);
+  }
+
+  if (isLoading && personas.length === 0) {
+    return (
+      <div className="app-container">
+        <ClipLoader color="#3b82f6" size={50} />
       </div>
-  
+    );
+  }
+
+  if (personas.length === 0) {
+    return (
+      <div className="app-container">
+        <div className="topic-select-container" style={{ marginBottom: '1.5rem' }}>
+          <input
+            type="text"
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            placeholder="Enter your own topic..."
+            className="topic-input"
+          />
+          <button
+            onClick={() => initializeServer(false)}
+            className="set-button"
+          >
+            Set Topic
+          </button>
+          <button
+            onClick={() => initializeServer(true)}
+            className="set-button"
+          >
+            Generate Random
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="app-container">  
       <h1>{topic}</h1>
 
       <div className="personas-container">

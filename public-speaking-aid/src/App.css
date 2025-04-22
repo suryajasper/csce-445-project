@@ -3,7 +3,6 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
@@ -53,9 +52,11 @@ body {
 }
 
 .app-container {
-  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
@@ -70,7 +71,11 @@ h1 {
   flex-wrap: wrap;
   justify-content: center;
   gap: 2rem;
-  margin-bottom: 2rem;
+  max-height: 500px;
+  overflow-y: scroll;
+  border-radius: 1rem;
+  background-color: hwb(0 88% 12%);
+  padding: 1rem;
 }
 
 .character {

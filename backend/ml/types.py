@@ -12,6 +12,7 @@ class Character(BaseModel):
     age: int
     position: float
     experience: str
+    speech_style: str
 
 class CharacterList(BaseModel):
     characters: List[Character]
