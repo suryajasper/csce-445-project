@@ -46,12 +46,12 @@ const App: React.FC = () => {
       // Stop listening and send the message
       SpeechRecognition.stopListening();
       setIsUserMuted(true);
-  
+
       const message = transcript.trim();
       const unmutedCharacterIds = Object.entries(mutedState)
         .filter(([_, muted]) => !muted)
         .map(([id]) => parseInt(id));
-  
+
       if (message && unmutedCharacterIds.length > 0) {
         console.log({
           message,
@@ -79,13 +79,13 @@ const App: React.FC = () => {
         oldPersonas.map(persona =>
           persona.id === data.character_id
             ? {
-                ...persona,
-                position: data.position_update,
-                quote: data.response,
-              }
+              ...persona,
+              position: data.position_update,
+              quote: data.response,
+            }
             : persona
         )
-      );      
+      );
     };
 
     on('character_response', handler);
@@ -122,7 +122,7 @@ const App: React.FC = () => {
           experience: character.experience,
           muted: true,
         } as Persona)
-      ));
+        ));
       setMutedState(data.characters.reduce((acc, c) => ({ ...acc, [c.id]: true }), {}));
       setTopic(data.topic.topic);
     };
@@ -133,13 +133,33 @@ const App: React.FC = () => {
 
   return (
     <div className="app-container">
+      <div className="topic-select-container" style={{ marginBottom: '1.5rem' }}>
+        <input
+          type="text"
+          value={topic}
+          onChange={(e) => setTopic(e.target.value)}
+          placeholder="Enter your own topic..."
+          className="topic-input"
+        />
+        <button
+          onClick={() => {
+            if (topic.trim()) {
+              setTopic(topic.trim());
+            }
+          }}
+          className="set-button"
+        >
+          Set Topic
+        </button>
+      </div>
+  
       <h1>{topic}</h1>
 
       <div className="personas-container">
         {personas.map(p => (
-          <div 
-            className="character" 
-            key={p.id} 
+          <div
+            className="character"
+            key={p.id}
             onClick={() => setSelectedPersona(p)}
           >
             <p className="character-name">{p.name}</p>
